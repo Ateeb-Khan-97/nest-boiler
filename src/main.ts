@@ -55,10 +55,8 @@ async function bootstrap() {
     SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
   }
 
-  await app.listen(GLOBAL_CONFIG.nest.port, async () => {
-    console.log(
-      `Server started listening: http://localhost:${GLOBAL_CONFIG.nest.port}`,
-    );
-  });
+  await app.listen(GLOBAL_CONFIG.nest.port, '0.0.0.0');
+  const url = await app.getUrl();
+  console.log(`[Server]: Listening ${url}`);
 }
 bootstrap();

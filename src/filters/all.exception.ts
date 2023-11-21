@@ -12,21 +12,22 @@ import { ResponseMapper } from 'src/shared/mappers/Response.mapper';
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-  catch(exception: unknown, host: ArgumentsHost): void {
+  catch(exception, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-
-    console.error(exception['name'], ':', exception['message']);
+    console.error(`[${exception?.name}]: ${exception?.message}`);
 
     const httpStatus =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const response = exception['response'];
+    const response = exception?.response;
     let message = 'Error';
-    if (typeof response != 'string') message = response?.message || 'Error';
-    if (Array.isArray(response.message)) message = response.message[0];
+    if (response) {
+      if (typeof response != 'string') message = response?.message || 'Error';
+      if (Array.isArray(response.message)) message = response.message[0];
+    }
 
     httpAdapter.reply(
       ctx.getResponse(),

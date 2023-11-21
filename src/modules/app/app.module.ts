@@ -1,7 +1,6 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GLOBAL_CONFIG } from 'src/config/global.config';
-import { LoggerMiddleware } from 'src/middlewares/logger.middleware';
 import { PrismaModule } from '../prisma/prisma.module';
 import { CommonModule } from '../common/common.module';
 import { UserModule } from '../users/users.module';
@@ -19,8 +18,4 @@ import { JwtAuthGuard } from '../auth/auth.jwt.guard';
   ],
   providers: [{ provide: APP_GUARD, useClass: JwtAuthGuard }],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
