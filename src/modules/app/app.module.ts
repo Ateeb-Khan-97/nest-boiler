@@ -8,10 +8,12 @@ import { UserModule } from '../users/users.module';
 import { AuthModule } from '../auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '../auth/auth.jwt.guard';
+import { LoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [() => GLOBAL_CONFIG] }),
+    LoggerModule,
     CommonModule,
     PrismaModule,
     AuthModule,

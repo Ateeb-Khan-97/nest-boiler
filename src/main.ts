@@ -12,11 +12,13 @@ import { ConfigService } from '@nestjs/config';
 import fastifyCookie from '@fastify/cookie';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
+import { MyLogger } from './modules/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
+    { logger: ['error', 'warn'] },
   );
   app.setGlobalPrefix(GLOBAL_CONFIG.globalPrefix);
 
@@ -53,6 +55,11 @@ async function bootstrap() {
     SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
   }
 
-  await app.listen(GLOBAL_CONFIG.nest.port);
+  await app.listen(GLOBAL_CONFIG.nest.port, async () => {
+    const myLogger = await app.resolve(MyLogger);
+    myLogger.log(
+      `Server started listening: http://localhost:${GLOBAL_CONFIG.nest.port}`,
+    );
+  });
 }
 bootstrap();
