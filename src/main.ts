@@ -12,7 +12,6 @@ import { ConfigService } from '@nestjs/config';
 import fastifyCookie from '@fastify/cookie';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
-import { MyLogger } from './modules/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,6 +19,7 @@ async function bootstrap() {
     new FastifyAdapter(),
     { logger: ['error', 'warn'] },
   );
+
   app.setGlobalPrefix(GLOBAL_CONFIG.globalPrefix);
 
   app.register(fastifyCookie, { secret: '' });
@@ -56,8 +56,7 @@ async function bootstrap() {
   }
 
   await app.listen(GLOBAL_CONFIG.nest.port, async () => {
-    const myLogger = await app.resolve(MyLogger);
-    myLogger.log(
+    console.log(
       `Server started listening: http://localhost:${GLOBAL_CONFIG.nest.port}`,
     );
   });
