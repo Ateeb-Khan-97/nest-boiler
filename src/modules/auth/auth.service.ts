@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { AuthHelpers } from 'src/shared/helpers/auth.helper';
 import { GLOBAL_CONFIG } from 'src/config/global.config';
 import { LoginUserDTO, RegisterUserDTO } from './auth.dto';
 import { CommonService } from '../common/common.service';
@@ -21,7 +20,10 @@ export class AuthService {
 
     if (!userData) throw new UnauthorizedException();
 
-    const isMatch = await AuthHelpers.verify(password, userData.password);
+    const isMatch = await this.commonService.verify(
+      password,
+      userData.password,
+    );
 
     if (!isMatch) throw new UnauthorizedException();
 
