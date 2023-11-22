@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginUserDTO, RegisterUserDTO } from './auth.dto';
 import { JWT_EXPIRY_SECONDS } from 'src/shared/constants/global.constants';
@@ -43,7 +43,8 @@ export class AuthController {
   }
 
   @Post('logout')
-  logout(@Res() res: FastifyReply) {
+  @ApiBearerAuth('access-token')
+  async logout(@Res() res: FastifyReply) {
     res.clearCookie('accessToken');
     res
       .status(200)

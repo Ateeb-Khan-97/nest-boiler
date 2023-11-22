@@ -5,8 +5,9 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { CommonModule } from '../common/common.module';
 import { UserModule } from '../users/users.module';
 import { AuthModule } from '../auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from '../auth/auth.jwt.guard';
+import { GlobalInterceptor } from 'src/interceptors/global.interceptor';
 
 @Module({
   imports: [
@@ -16,6 +17,9 @@ import { JwtAuthGuard } from '../auth/auth.jwt.guard';
     AuthModule,
     UserModule,
   ],
-  providers: [{ provide: APP_GUARD, useClass: JwtAuthGuard }],
+  providers: [
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_INTERCEPTOR, useClass: GlobalInterceptor },
+  ],
 })
 export class AppModule {}
