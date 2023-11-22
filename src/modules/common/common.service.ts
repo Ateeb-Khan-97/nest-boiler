@@ -3,7 +3,6 @@ import { randomBytes, scrypt } from 'crypto';
 
 @Injectable()
 export class CommonService {
-  // Auth
   public hash(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const salt = randomBytes(8).toString('hex');
@@ -23,7 +22,7 @@ export class CommonService {
       });
     });
   }
-  //
+
   public exclude<T, Key extends keyof T>(object: T, keys: Key[]): Omit<T, Key> {
     return Object.fromEntries(
       Object.entries(object).filter(([key]) => !keys.includes(key as Key)),
