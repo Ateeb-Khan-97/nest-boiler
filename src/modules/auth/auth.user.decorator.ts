@@ -1,4 +1,5 @@
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
+import type { User } from '@prisma/client';
 
 export const CurrentUser = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): IUser => {
@@ -7,9 +8,4 @@ export const CurrentUser = createParamDecorator(
   },
 );
 
-export interface IUser {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-}
+export interface IUser extends Omit<User, 'password' | 'created' | 'updated'> {}
