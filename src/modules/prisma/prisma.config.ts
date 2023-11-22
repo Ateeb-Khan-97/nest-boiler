@@ -1,4 +1,5 @@
 import { PrismaClientOptions } from '@prisma/client/runtime/library';
+import { ENV } from 'src/config/env.config';
 
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';
 export type LogDefinition = {
@@ -14,5 +15,5 @@ export const PRISMA_LOG_CONFIG: Array<LogDefinition> = [
 ];
 
 export const PRISMA_CLIENT_OPTIONS: PrismaClientOptions = {
-  log: PRISMA_LOG_CONFIG,
+  log: ENV.IS_DEV ? PRISMA_LOG_CONFIG : null,
 };
