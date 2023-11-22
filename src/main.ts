@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './filters/all.exception';
 import fastifyCsrfProtection from '@fastify/csrf-protection';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { MyLogger } from './modules/logger/logger.service';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { SwaggerConfig } from './config/config.interface';
 import { GLOBAL_CONFIG } from './config/global.config';
@@ -11,8 +12,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import fastifyCookie from '@fastify/cookie';
 import fastifyHelmet from '@fastify/helmet';
+import { ENV } from './config/env.config';
 import fastifyCors from '@fastify/cors';
-import { MyLogger } from './modules/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -58,9 +59,11 @@ async function bootstrap() {
 
   await app.listen(GLOBAL_CONFIG.nest.port, async () => {
     const myLogger = await app.resolve(MyLogger);
-    myLogger.log(
-      `application started at http://localhost:${GLOBAL_CONFIG.nest.port}`,
-    );
+    myLogger.log(`application started at port ${GLOBAL_CONFIG.nest.port}`);
+    if (ENV.IS_DEV)
+      myLogger.log(
+        `docs at http://localhost:${GLOBAL_CONFIG.nest.port}/api/docs`,
+      );
   });
 }
 bootstrap();
