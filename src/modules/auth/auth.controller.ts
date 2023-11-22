@@ -16,7 +16,10 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ description: 'Login user' })
   @ApiBody({ type: LoginUserDTO })
-  async login(@Body() user: LoginUserDTO, @Res() res: FastifyReply) {
+  async login(
+    @Body() user: LoginUserDTO,
+    @Res({ passthrough: true }) res: FastifyReply,
+  ) {
     const loginData = await this.authService.login(user);
     res.cookie('accessToken', loginData.accessToken, {
       expires: new Date(new Date().getTime() + JWT_EXPIRY_SECONDS * 1000),
@@ -44,7 +47,7 @@ export class AuthController {
 
   @Post('logout')
   @ApiBearerAuth('access-token')
-  async logout(@Res() res: FastifyReply) {
+  async logout(@Res({ passthrough: true }) res: FastifyReply) {
     res.clearCookie('accessToken');
     res
       .status(200)

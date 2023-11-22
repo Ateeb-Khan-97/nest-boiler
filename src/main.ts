@@ -12,6 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import fastifyCookie from '@fastify/cookie';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
+import { MyLogger } from './modules/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -55,8 +56,11 @@ async function bootstrap() {
     SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
   }
 
-  await app.listen(GLOBAL_CONFIG.nest.port, '0.0.0.0');
-  const url = await app.getUrl();
-  console.log(`[Server]: Listening ${url}`);
+  await app.listen(GLOBAL_CONFIG.nest.port, async () => {
+    const myLogger = await app.resolve(MyLogger);
+    myLogger.log(
+      `application started at http://localhost:${GLOBAL_CONFIG.nest.port}`,
+    );
+  });
 }
 bootstrap();

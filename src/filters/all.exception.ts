@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+import { MyLogger } from 'src/modules/logger/logger.service';
 import { ResponseMapper } from 'src/shared/mappers/Response.mapper';
 
 @Catch()
@@ -15,7 +16,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-    console.error(`[${exception?.name}]: ${exception?.message}`);
+
+    const logger = new MyLogger();
+    logger.setContext(exception['name']);
+    logger.error(exception['message']);
 
     const httpStatus =
       exception instanceof HttpException
