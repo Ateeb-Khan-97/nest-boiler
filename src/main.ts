@@ -58,12 +58,10 @@ async function bootstrap() {
   }
 
   await app.listen(GLOBAL_CONFIG.nest.port, async () => {
+    const PORT = GLOBAL_CONFIG.nest.port;
     const myLogger = await app.resolve(MyLogger);
-    myLogger.log(`application started at port ${GLOBAL_CONFIG.nest.port}`);
-    if (ENV.IS_DEV)
-      myLogger.log(
-        `docs at http://localhost:${GLOBAL_CONFIG.nest.port}/api/docs`,
-      );
+    myLogger.log(`application started at port ${PORT}`);
+    if (ENV.IS_DEV) myLogger.log(`docs at http://localhost:${PORT}/api/docs`);
   });
 }
 bootstrap();
