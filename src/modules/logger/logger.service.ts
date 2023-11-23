@@ -7,12 +7,9 @@ const colors: Color = require('colors');
 
 @Injectable()
 export class MyLogger implements LoggerService {
-  private readonly logger;
-
+  private readonly logger: winston.Logger;
   private level = 'info';
-
   private context: string;
-
   private static LOGS_PATH = 'storage/logs';
 
   constructor() {
@@ -32,7 +29,6 @@ export class MyLogger implements LoggerService {
   }
   public setContext(context: string): this {
     this.context = context;
-
     return this;
   }
 
